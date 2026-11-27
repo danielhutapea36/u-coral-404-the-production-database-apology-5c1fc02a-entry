@@ -34,7 +34,9 @@ def build_line() -> str:
     so fail loudly instead of writing a malformed file. It must
     also be more than white space: the gate refuses a file that
     is only white space. Control characters are refused too: one
-    could break how the judge displays the line.
+    could break how the judge displays the line. Angle brackets
+    are refused as well: the entry line must stay free of HTML
+    markup.
     """
     line = _LINE
     if not line.strip():
@@ -45,6 +47,8 @@ def build_line() -> str:
         raise ValueError("line must be a single line")
     if "  " in line:
         raise ValueError("line must not contain two spaces in a row")
+    if "<" in line or ">" in line:
+        raise ValueError("line must not contain HTML markup")
     if any(ord(ch) < 0x20 or ord(ch) == 0x7F for ch in line):
         raise ValueError("line must not contain control characters")
     return line
